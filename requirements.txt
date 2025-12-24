@@ -7,3 +7,4 @@ openpyxl
 wordcloud
 matplotlib
 plotly
+tensorflow==2.12.0
