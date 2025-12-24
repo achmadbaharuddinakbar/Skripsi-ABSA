@@ -862,7 +862,8 @@ def main():
         menu = st.radio(
             "",
             ["Ulasan Tunggal", "Dashboard Dataset"],
-            index=0
+            index=0,
+            label_visibility="collapsed"
         )
 
     # ==================== LOAD RESOURCES (MODEL) ========================
