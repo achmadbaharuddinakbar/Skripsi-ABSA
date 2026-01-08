@@ -78,11 +78,11 @@ def split_into_sentences(text: str):
 
     for line in lines:
         # ✅ HANYA split . ! ?
-        parts = re.split(r"([.!?])", line)
+        parts = re.split(r"([,.!?])", line)
         buf = ""
 
         for part in parts:
-            if part in [".", "!", "?"]:
+            if part in [",", ".", "!", "?"]:
                 buf += part
                 if buf.strip():
                     sentences.append(buf.strip())
@@ -154,7 +154,6 @@ def load_lexicons():
         slang_dict.setdefault(s, n)
 
     return slang_dict
-
 
 def _normalize_repeated_chars(token: str, max_repeat: int = 2) -> str:
     """
@@ -307,7 +306,7 @@ def gabung_negasi(text: str) -> str:
     """
     Gabungkan negasi + 1 kata setelahnya menjadi satu token dengan underscore.
     Contoh: 'tidak kasar' -> 'tidak_kasar'
-    Ini harus konsisten dengan training LogReg kamu.
+    Ini harus konsisten dengan training Long Short-Term Memory kamu.
     """
     t = str(text).lower()
 
@@ -485,7 +484,7 @@ def split_by_punctuation(text: str):
     parts = re.split(PUNCT_SPLIT_REGEX, text)
     return [p.strip() for p in parts if p.strip()]
 
-CONJ_SPLIT_WORDS2 = {"tapi", "namun", "tetapi", "sedangkan", "walaupun", "meskipun", "cuma", "hanya"}
+CONJ_SPLIT_WORDS2 = {"tapi", "namun", "tetapi", "sedangkan", "walaupun", "meskipun", "cuma", "hanya", "dan"}
 
 def split_by_conjunction(seg: str):
     toks = _simple_clean(seg).split()
@@ -538,7 +537,7 @@ def detect_aspect_by_seed(tokens):
 
     return best_aspect, hits
 
-CONJ_JUNK = {"tapi", "namun", "tetapi", "sedangkan", "walaupun", "meskipun", "cuma", "hanya"}
+CONJ_JUNK = {"tapi", "namun", "tetapi", "sedangkan", "walaupun", "meskipun", "cuma", "hanya", "dan"}
 
 def segment_text_aspect_aware(text: str, use_lexicon=False):
     """
@@ -638,7 +637,7 @@ def segment_text_aspect_aware(text: str, use_lexicon=False):
     return segments
 
 
-CONJ_SPLIT_WORDS = {"tapi", "namun", "tetapi", "sedangkan", "walaupun", "meskipun"}
+CONJ_SPLIT_WORDS = {"tapi", "namun", "tetapi", "sedangkan", "walaupun", "meskipun", "dan"}
 
 def segment_text_for_aspect(text: str, use_lexicon=False):
     """
@@ -728,7 +727,7 @@ def segment_text_for_aspect(text: str, use_lexicon=False):
     return out
 CONJ_SPLIT_WORDS = {
     "tapi", "namun", "tetapi", "sedangkan",
-    "walaupun", "meskipun", "cuma", "hanya"
+    "walaupun", "meskipun", "cuma", "hanya", "dan"
 }
 
 def split_by_punct_and_conj(text: str):
@@ -740,7 +739,7 @@ def split_by_punct_and_conj(text: str):
     """
     text = str(text).replace("\n", ". ")
     # split tanda baca dulu
-    parts = re.split(r"[.!?;:]+", text)
+    parts = re.split(r"[,.!?;:]+", text)
     parts = [p.strip() for p in parts if p.strip()]
 
     out = []
@@ -910,8 +909,6 @@ def segment_text_merge_by_aspect(text: str, use_lexicon=False):
     segs = merge_short_tail_segments(segs, SEED_ROOTS, use_lexicon=use_lexicon, max_words=3)
 
     return segs
-
-
 
 def test_segmented_text(
     text,
@@ -1122,8 +1119,6 @@ def test_segmented_text(
 
     return results
 
-
-
 # =====================================================
 # HELPER: PROSES DATASET MENJADI SEGMENT-LEVEL
 # =====================================================
@@ -1185,8 +1180,6 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
-
-
 
 def main():
 
